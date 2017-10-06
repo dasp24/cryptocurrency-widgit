@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+table{
+  border-collapse:separate;
+  border:solid black 2.5px;
+  border-radius:6px;
+  -moz-border-radius:6px;
+}
+
+td, th {
+  border-left:solid black 1px;
+  border-top:solid black 1px;
+}
+
+th{
+  border-top: none;
+}
+
+.arrows {
+  position: relative;
+  float: right;
+  padding-right: 5px;
+}
+
+.numbers {
+  text-align: right;
+}
