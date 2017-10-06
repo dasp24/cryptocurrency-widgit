@@ -2,13 +2,14 @@ import React from 'react';
 import {
   connect
 } from 'react-redux';
-import { Timeline } from 'react-twitter-widgets';
+
 
 import {
   loadBitcoin, loadEthereum,loadLitecoin, loadExchangeRate, loadRipple
 } from './redux/currencies/actions';
 
 import Currency from './components/Currency';
+import Feed from './components/Feed';
 
 // so it would be nice to select the currencies you want
 
@@ -23,16 +24,17 @@ class Cryptocurrency extends React.Component {
       Bitcoin: 0,
       Ethereum: 0,
       Litecoin:0,
-      Ripple:0
+      Ripple:0,
+      feeds:['jimmysong']
     };
-    this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
   componentDidMount() {
-    this.props.loadBitcoin()
-    this.props.loadEthereum()
-    this.props.loadLitecoin()
-    this.props.loadRipple()
-    this.props.loadExchangeRate()
+    this.props.loadBitcoin();
+    this.props.loadEthereum();
+    this.props.loadLitecoin();
+    this.props.loadRipple();
+    this.props.loadExchangeRate();
     this.intervals = [
       setInterval(() => this.props.loadBitcoin(), 60000),
       setInterval(() => this.props.loadEthereum(), 60000),
@@ -42,13 +44,13 @@ class Cryptocurrency extends React.Component {
     ];
   }
 
-  componentWillUnmount() {
-    this.intervals.forEach(clearInterval);
-  }
-
   handleInputChange(name,value) {
+     value.match(/^[0-9]+$/) ?
+        this.setState({
+        [name]: value
+      }) :
     this.setState({
-      [name]: value
+      [name]: null
     });
   }
 
@@ -58,7 +60,7 @@ class Cryptocurrency extends React.Component {
       <div className="section">
           <div>
             <div>
-        <h2>Live tracker of my favourites currencies:</h2>
+        <h2>Cryptocurrency widgit</h2>
         <table>
           <tr>
             <td>Coin</td>
@@ -84,57 +86,22 @@ class Cryptocurrency extends React.Component {
             </td>
           </tr>
         </table>
-        <Timeline
-              dataSource={{
-                sourceType: 'profile',
-                screenName: 'jimmysong'
-              }}
-             className="text-right"
-              options={{
-                username: 'jimmysong',
-                height: '300',
-                width: '500'
-              }}
-            />
-        </div>
         <div>
-        <Timeline
-              dataSource={{
-                sourceType: 'profile',
-                screenName: 'bobbyclee'
-              }}
-             className="text-right"
-              options={{
-                username: 'bobbyclee',
-                height: '300',
-                width: '500'
-              }}
-            />
-            <Timeline
-              dataSource={{
-                sourceType: 'profile',
-                screenName: 'PConfidential'
-              }}
-             className="text-right"
-              options={{
-                username: 'PConfidential',
-                height: '300',
-                width: '500'
-              }}
-            />
+        <input ref={ref => this.inputRef = ref}  placeholder="twitter feed..."/>
+        <button >Add feed</button>
+        </div>
+        {this.state.feeds.map((profile) => <Feed profile={profile}/>
+
+        )}
             </div>
             </div>
       </div>
     );
   }
-};
+}
 
 function mapStateToProps(state) {
   return {
-    // bitcoin: state.currencies.bitcoin,
-    // ethereum: state.currencies.ethereum,
-    // litecoin: state.currencies.litecoin,
-    // ripple: state.currencies.ripple,
     currencies: [
       state.currencies.bitcoin,
       state.currencies.ethereum,
@@ -155,4 +122,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cryptocurrency)
+export default connect(mapStateToProps, mapDispatchToProps)(Cryptocurrency);
