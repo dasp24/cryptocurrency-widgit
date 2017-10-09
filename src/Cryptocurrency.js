@@ -1,26 +1,20 @@
 import React from 'react';
 import {
-  connect
-} from 'react-redux';
-
-
-import {
-  loadBitcoin, loadEthereum,loadLitecoin, loadExchangeRate, loadRipple
-} from './redux/currencies/actions';
+} from './components/helperFunctions';
 
 import Currency from './components/Currency';
 import Feed from './components/Feed';
 
+const fetch = require('node-fetch');
 
 class Cryptocurrency extends React.Component {
   constructor() {
     super ();
     this.state = {
-      Bitcoin: 0,
-      Ethereum: 0,
-      Litecoin:0,
-      Ripple:0,
-      feeds:[]
+      currencyIds : ['BTC', 'ETH','DASH','LTC','XRP','NEO'],
+      currencies: [],
+      feeds:[],
+      exchangeRate:null
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.onClick = this.onClick.bind(this);
@@ -70,13 +64,6 @@ class Cryptocurrency extends React.Component {
       getExchangeRate();
     },30000);
     if (localStorage.getItem('feeds')) this.setState({ feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))});
-    this.intervals = [
-      setInterval(() => this.props.loadBitcoin(), 60000),
-      setInterval(() => this.props.loadEthereum(), 60000),
-      setInterval(() => this.props.loadLitecoin(), 60000),
-      setInterval(() => this.props.loadRipple(), 60000),
-      setInterval(() => this.props.loadExchangeRate(), 60000)
-    ];
   }
 
   handleInputChange(name,value) {
@@ -105,7 +92,6 @@ class Cryptocurrency extends React.Component {
   }
 
   render() {
-    const { exchangeRate, currencies } = this.props;
     return (
       <div className="section">
           <div>
@@ -120,19 +106,19 @@ class Cryptocurrency extends React.Component {
             <td>Your total</td>
           </tr>
   
-          {currencies.map((coin) => 
-              <Currency coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={exchangeRate} state={this.state} handleInputChange={this.handleInputChange}/>
-          )}
+          {this.state.currencies ? this.state.currencies.map((coin) => 
+              <Currency coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange}/>
+          ) : null}
 
           <tr>
             <td></td>
             <td></td>
             <td></td>
             <td>Total</td>
-            <td>£{currencies.reduce((acc,coin) => {
-                acc += (coin.price / exchangeRate) * this.state[coin.name]; 
+            <td>£{this.state.currencies ? this.state.currencies.reduce((acc,coin) => {
+                acc += Number((this.state[coin.name]) / Number(this.state.exchangeRate)) * Number(this.state[(coin.name) + 'value']); 
                 return acc;                            
-              },0).toFixed(2)}
+              },0).toFixed(2) : null}
             </td>
           </tr>
         </table>
@@ -150,26 +136,4 @@ class Cryptocurrency extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currencies: [
-      state.currencies.bitcoin,
-      state.currencies.ethereum,
-      state.currencies.litecoin,
-      state.currencies.ripple
-    ],
-    exchangeRate: state.currencies.exchangeRate
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    loadBitcoin: () => dispatch(loadBitcoin()),
-    loadEthereum: () => dispatch(loadEthereum()),
-    loadLitecoin: () => dispatch(loadLitecoin()),
-    loadRipple: () => dispatch(loadRipple()),
-    loadExchangeRate: () => dispatch(loadExchangeRate())
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Cryptocurrency);
+export default Cryptocurrency;
