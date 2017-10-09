@@ -11,11 +11,6 @@ import {
 import Currency from './components/Currency';
 import Feed from './components/Feed';
 
-// so it would be nice to select the currencies you want
-
-// then put in the values of the coin you have
-
-// total at the bottom
 
 class Cryptocurrency extends React.Component {
   constructor() {
@@ -25,16 +20,20 @@ class Cryptocurrency extends React.Component {
       Ethereum: 0,
       Litecoin:0,
       Ripple:0,
-      feeds:['jimmysong']
+      feeds:[]
     };
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.onClick = this.onClick.bind(this);
+    this.removeFeed = this.removeFeed.bind(this);
   }
   componentDidMount() {
+    console.log('look at me '+ localStorage.getItem('feeds'));
     this.props.loadBitcoin();
     this.props.loadEthereum();
     this.props.loadLitecoin();
     this.props.loadRipple();
     this.props.loadExchangeRate();
+    if (localStorage.getItem('feeds')) this.setState({ feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))});
     this.intervals = [
       setInterval(() => this.props.loadBitcoin(), 60000),
       setInterval(() => this.props.loadEthereum(), 60000),
@@ -81,8 +80,8 @@ class Cryptocurrency extends React.Component {
             <td>Coin</td>
             <td>Worth</td>
             <td>Change in 24 hours</td>
+            <td>Amount</td>
             <td>Your total</td>
-            <td>Worth</td>
           </tr>
   
           {currencies.map((coin) => 
