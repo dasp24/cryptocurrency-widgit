@@ -6,7 +6,6 @@ export function loadBitcoin() {
     return async(dispatch) => {
         const btcNameAndExchange = await bitcoin()
             .then((data) => {
-                console.log(data)
                 return {
                 name: data.display_name,
                 price: data.price_usd,
