@@ -3,18 +3,20 @@ import { Timeline } from 'react-twitter-widgets';
 
 class Feed extends React.Component {
     render() {
-        return (<Timeline
+        return (
+        <div>
+          <Timeline
             dataSource={{
               sourceType: 'profile',
               screenName: this.props.profile
             }}
-           className="text-right"
             options={{
-              username: 'jimmysong',
               height: '300',
               width: '500'
             }}
           />
+          <button onClick={() => this.props.removeFeed(this.props.profile)}>remove</button>
+          </div>
         );
   }
 }
