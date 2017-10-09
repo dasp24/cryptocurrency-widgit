@@ -54,6 +54,21 @@ class Cryptocurrency extends React.Component {
     });
   }
 
+  onClick() {
+    this.setState({ feeds: this.state.feeds.concat(this.twitterInputRef.value) });
+    localStorage.setItem('feeds',this.state.feeds.concat(this.twitterInputRef.value));
+    this.twitterInputRef.value = null;
+  }
+
+  removeFeed(profile) {
+      const index = this.state.feeds.indexOf(profile);
+      const savedList = localStorage.getItem('feeds').split(',');
+      localStorage.removeItem('feeds');
+      localStorage.setItem('feeds',(savedList.slice(0,index).concat(savedList.slice(index+1))).join(','))
+      this.setState({feeds: this.state.feeds.slice(0,index).concat(this.state.feeds.slice(index + 1))});
+
+  }
+
   render() {
     const { exchangeRate, currencies } = this.props;
     return (
