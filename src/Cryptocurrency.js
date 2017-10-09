@@ -102,10 +102,10 @@ class Cryptocurrency extends React.Component {
           </tr>
         </table>
         <div>
-        <input ref={ref => this.inputRef = ref}  placeholder="twitter feed..."/>
-        <button >Add feed</button>
+        <input ref={ref => this.twitterInputRef = ref}  placeholder="twitter feed..."/>
+        <button onClick={this.onClick}>Add feed</button>
         </div>
-        {this.state.feeds.map((profile) => <Feed profile={profile}/>
+        {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>
 
         )}
             </div>
