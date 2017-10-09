@@ -27,12 +27,48 @@ class Cryptocurrency extends React.Component {
     this.removeFeed = this.removeFeed.bind(this);
   }
   componentDidMount() {
-    console.log('look at me '+ localStorage.getItem('feeds'));
-    this.props.loadBitcoin();
-    this.props.loadEthereum();
-    this.props.loadLitecoin();
-    this.props.loadRipple();
-    this.props.loadExchangeRate();
+   const getCoinAndValue = () => 
+   this.state.currencyIds.forEach((coinID) => {
+      fetch(`http://coincap.io/page/${coinID}`)
+      .then((response) => response.json())
+              .then((data) => {
+                  return {
+                  name: data.display_name,
+                  price: data.price_usd,
+                  changeInDay: data.cap24hrChange
+                  };
+              })
+              .then((data) => { 
+                const newData = (this.state.currencies) ? this.state.currencies.concat([data]) : [data];
+                this.setState({currencies: newData});
+                this.setState({[data.name + 'value']: data.price});
+                this.setState({[data.name]: null});
+              });
+    });
+
+   const updateValue = () => {
+    this.state.currencyIds.forEach((coinID) => {
+    fetch(`http://coincap.io/page/${coinID}`)
+    .then((response) => response.json())
+            .then((data) => {
+              this.setState({[data.name + 'value']: data.price});
+            });
+      });
+  };
+
+   const getExchangeRate = () => fetch('http://api.fixer.io/latest?symbols=USD&base=GBP')
+    .then((response) => response.json())
+    .then((data) =>
+        data.rates.USD
+    )
+    .then((data) => this.setState({exchangeRate:data}));
+    getCoinAndValue(this.state.currencyIds);
+    getExchangeRate();
+    setInterval(() => {
+      console.log(this.state);
+      updateValue(this.state.currencyIds);
+      getExchangeRate();
+    },30000);
     if (localStorage.getItem('feeds')) this.setState({ feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))});
     this.intervals = [
       setInterval(() => this.props.loadBitcoin(), 60000),
