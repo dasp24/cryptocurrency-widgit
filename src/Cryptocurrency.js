@@ -42,7 +42,8 @@ class Cryptocurrency extends React.Component {
                   return {
                   name: data.display_name,
                   price: data.price_usd,
-                  changeInDay: data.cap24hrChange
+                  changeInDay: data.cap24hrChange,
+                  id:data.id
                   };
               })
               .then((data) => { 
