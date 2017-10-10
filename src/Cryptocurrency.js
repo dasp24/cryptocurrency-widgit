@@ -1,13 +1,11 @@
 import React from 'react';
 import fetch from 'node-fetch';
 
-import {
+import {getExchangeRate
 } from './components/helperFunctions';
 
 import Currency from './components/Currency';
 import Feed from './components/Feed';
-
-const fetch = require('node-fetch');
 
 class Cryptocurrency extends React.Component {
   constructor() {
@@ -19,17 +17,16 @@ class Cryptocurrency extends React.Component {
       exchangeRate: null
     };
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.addFeed = this.addFeed.bind(this);
     this.removeFeed = this.removeFeed.bind(this);
     this.addCoin = this.addCoin.bind(this);
+    this.removeCoins = this.removeCoins.bind(this);
     this.removeCoin = this.removeCoin.bind(this);
   }
   componentDidMount() {
-
     if (localStorage.getItem('currencies')) this.setState({
       currencyIds: localStorage.getItem('currencies').split(',')
     });
-
     if (localStorage.getItem('feeds')) this.setState({
       feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))
     });
@@ -53,7 +50,7 @@ class Cryptocurrency extends React.Component {
               });
             this.setState({
               [data.name + 'value']: data.price
-    });
+            });
             this.setState({
               [data.name]: null
             });
@@ -97,28 +94,36 @@ class Cryptocurrency extends React.Component {
     });
   }
 
-  onClick() {
+  addFeed() {
+    if (this.twitterInputRef.value) {
     this.setState({
       feeds: this.state.feeds.concat(this.twitterInputRef.value)
     });
     localStorage.setItem('feeds', this.state.feeds.concat(this.twitterInputRef.value));
     this.twitterInputRef.value = null;
+    }
   }
 
   removeFeed(profile) {
       const index = this.state.feeds.indexOf(profile);
       const savedList = localStorage.getItem('feeds').split(',');
       localStorage.removeItem('feeds');
-    localStorage.setItem('feeds', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
-    this.setState({
-      feeds: this.state.feeds.slice(0, index).concat(this.state.feeds.slice(index + 1))
+      localStorage.setItem('feeds', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
+      this.setState({
+       feeds: this.state.feeds.slice(0, index).concat(this.state.feeds.slice(index + 1))
     });
+
   }
 
   addCoin() {
+    console.log('getting new coin, beep, boop, beep');
     const id = this.currencyInputRef.value.toUpperCase();
     const IdList = this.state.currencyIds.concat(id);
-
+    if (this.state.currencyIds.includes(id)) {
+      this.currencyInputRef.value = null;
+      alert('This is a repeat request!');
+    }
+    else
     fetch(`http://coincap.io/page/${id}`)
       .then((res) => {
         return res.json();
@@ -127,16 +132,19 @@ class Cryptocurrency extends React.Component {
         if (!data.display_name) {
           this.currencyInputRef.value = null;
           throw new Error('Invalid Coin');
-  }
+        }
         return {
           name: data.display_name,
           price: data.price_usd,
-          changeInDay: data.cap24hrChange
+          changeInDay: data.cap24hrChange,
+          id:data.id
         };
       })
       .then((data) => {
         const newData = (this.state.currencies) ? this.state.currencies.concat([data]) : [data];
+
         localStorage.setItem('currencies', this.state.currencyIds.concat(id));
+
         this.setState({
           currencies: newData
         });
@@ -168,6 +176,7 @@ class Cryptocurrency extends React.Component {
   console.log(this.state)
   }
 
+  removeCoins() {
     localStorage.removeItem('currencies');
   }
 
@@ -178,6 +187,9 @@ class Cryptocurrency extends React.Component {
           <div>
             <div>
         <h2>Cryptocurrency widgit</h2>
+        <input ref={ref => this.currencyInputRef = ref}  placeholder="Please you coin Id"/>
+        <button onClick={() => this.addCoin()}>Add Coin</button>
+        <button onClick={() => this.removeCoins()}>Reset coins</button>
         <table>
           <tr>
             <td>Coin</td>
@@ -185,10 +197,11 @@ class Cryptocurrency extends React.Component {
             <td>Change in 24 hours</td>
             <td>Amount</td>
             <td>Your total</td>
+            <td>Remove</td>
           </tr>
   
           {this.state.currencies ? this.state.currencies.map((coin) => 
-              <Currency coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange}/>
+              <Currency id={coin.id} coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
           ) : null}
 
           <tr>
@@ -205,7 +218,7 @@ class Cryptocurrency extends React.Component {
         </table>
         <div>
         <input ref={ref => this.twitterInputRef = ref}  placeholder="twitter feed..."/>
-        <button onClick={this.onClick}>Add feed</button>
+        <button onClick={this.addFeed}>Add feed</button>
         </div>
         {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>
 
