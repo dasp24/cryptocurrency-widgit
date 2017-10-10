@@ -1,7 +1,10 @@
 body {
   margin: 0;
-  padding: 0;
+  padding: 100 100;
   font-family: sans-serif;
+  background: white;
+  background-size: 90% auto;
+
 }
 
 table{
@@ -9,6 +12,7 @@ table{
   border:solid black 2.5px;
   border-radius:6px;
   -moz-border-radius:6px;
+  background: white;
 }
 
 td, th {
@@ -28,4 +32,34 @@ th{
 
 .numbers {
   text-align: right;
+}
+
+.table_buttons {
+  background-color: white;
+  border: none;
+}
+
+.input_buttons {
+  background-color: #2db300;
+  border: none;
+}
+
+.remove_buttons{
+  background-color: #ff704d;
+  border: none;
+}
+
+.add_coin {
+  text-align: center
+}
+
+.centerTable { margin: 0px auto; }
+
+.background{
+  background-attachment: fixed;
+  background-position: center; 
+}
+
+h2{
+  color:rgb(192, 231, 16);
 }
