@@ -21,6 +21,15 @@ class Cryptocurrency extends React.Component {
     this.removeFeed = this.removeFeed.bind(this);
   }
   componentDidMount() {
+
+    if (localStorage.getItem('currencies')) this.setState({
+      currencyIds: localStorage.getItem('currencies').split(',')
+    });
+
+    if (localStorage.getItem('feeds')) this.setState({
+      feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))
+    });
+
    const getCoinAndValue = () => 
    this.state.currencyIds.forEach((coinID) => {
       fetch(`http://coincap.io/page/${coinID}`)
@@ -34,11 +43,17 @@ class Cryptocurrency extends React.Component {
               })
               .then((data) => { 
                 const newData = (this.state.currencies) ? this.state.currencies.concat([data]) : [data];
-                this.setState({currencies: newData});
-                this.setState({[data.name + 'value']: data.price});
-                this.setState({[data.name]: null});
+            this.setState({
+              currencies: newData
               });
+            this.setState({
+              [data.name + 'value']: data.price
     });
+            this.setState({
+              [data.name]: null
+            });
+          });
+      });
 
    const updateValue = () => {
     this.state.currencyIds.forEach((coinID) => {
