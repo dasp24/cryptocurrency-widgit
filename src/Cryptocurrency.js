@@ -156,7 +156,18 @@ class Cryptocurrency extends React.Component {
 
   }
 
-  removeCoin() {
+  removeCoin(id) {
+    const index = this.state.currencyIds.indexOf(id);
+    const savedList = localStorage.getItem('currencies').split(',');
+    localStorage.removeItem('currencies');
+    localStorage.setItem('currencies', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
+    this.setState({
+      currencyIds: this.state.currencyIds.slice(0, index).concat(this.state.currencyIds.slice(index + 1)),
+      currencies: this.state.currencies.slice(0, index).concat(this.state.currencies.slice(index + 1))
+  });
+  console.log(this.state)
+  }
+
     localStorage.removeItem('currencies');
   }
 
