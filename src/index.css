@@ -57,7 +57,11 @@ th{
 
 .background{
   background-attachment: fixed;
-  background-position: center; 
+  background-repeat: repeat-y;
+  background-position: 50% 0%;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 0;
 }
 
 h2{

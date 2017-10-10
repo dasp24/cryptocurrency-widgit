@@ -15,7 +15,7 @@ class Feed extends React.Component {
               width: '500'
             }}
           />
-          <button onClick={() => this.props.removeFeed(this.props.profile)}>remove</button>
+          <button className="remove_buttons" onClick={() => this.props.removeFeed(this.props.profile)}>remove</button>
           </div>
         );
   }
