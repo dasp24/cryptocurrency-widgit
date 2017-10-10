@@ -70,14 +70,13 @@ class Cryptocurrency extends React.Component {
       });
   };
 
-   const getExchangeRate = () => fetch('http://api.fixer.io/latest?symbols=USD&base=GBP')
-    .then((response) => response.json())
-    .then((data) =>
-        data.rates.USD
-    )
-    .then((data) => this.setState({exchangeRate:data}));
+    setTimeout(() => {
     getCoinAndValue(this.state.currencyIds);
-    getExchangeRate();
+    getExchangeRate().then((data) => this.setState({
+      exchangeRate: data
+    }));
+    },500);
+
     setInterval(() => {
       console.log(this.state);
       updateValue(this.state.currencyIds);
