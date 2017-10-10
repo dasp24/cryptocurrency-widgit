@@ -9,16 +9,18 @@ const fetch = require('node-fetch');
 
 class Cryptocurrency extends React.Component {
   constructor() {
-    super ();
+    super();
     this.state = {
-      currencyIds : ['BTC', 'ETH','DASH','LTC','XRP','NEO'],
+      currencyIds: [],
       currencies: [],
-      feeds:[],
-      exchangeRate:null
+      feeds: [],
+      exchangeRate: null
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.onClick = this.onClick.bind(this);
     this.removeFeed = this.removeFeed.bind(this);
+    this.addCoin = this.addCoin.bind(this);
+    this.removeCoin = this.removeCoin.bind(this);
   }
   componentDidMount() {
 
