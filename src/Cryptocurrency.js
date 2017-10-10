@@ -6,6 +6,7 @@ import {getExchangeRate
 
 import Currency from './components/Currency';
 import Feed from './components/Feed';
+import image from './background-image.jpg';
 
 class Cryptocurrency extends React.Component {
   constructor() {
@@ -15,6 +16,9 @@ class Cryptocurrency extends React.Component {
       currencies: [],
       feeds: [],
       exchangeRate: null
+    };
+    this.styles = {
+      backgroundImage: `url(${image})`
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.addFeed = this.addFeed.bind(this);
@@ -173,7 +177,7 @@ class Cryptocurrency extends React.Component {
       currencyIds: this.state.currencyIds.slice(0, index).concat(this.state.currencyIds.slice(index + 1)),
       currencies: this.state.currencies.slice(0, index).concat(this.state.currencies.slice(index + 1))
   });
-  console.log(this.state)
+  console.log(this.state);
   }
 
   removeCoins() {
@@ -183,49 +187,51 @@ class Cryptocurrency extends React.Component {
 
   render() {
     return (
-      <div className="section">
-          <div>
-            <div>
-        <h2>Cryptocurrency widgit</h2>
-        <input ref={ref => this.currencyInputRef = ref}  placeholder="Please you coin Id"/>
-        <button onClick={() => this.addCoin()}>Add Coin</button>
-        <button onClick={() => this.removeCoins()}>Reset coins</button>
-        <table>
-          <tr>
-            <td>Coin</td>
-            <td>Worth</td>
-            <td>Change in 24 hours</td>
-            <td>Amount</td>
-            <td>Your total</td>
-            <td>Remove</td>
-          </tr>
+          <div className="background" style={this.styles}>
+            <div className="section">
+              <div className="add_coin">
+                <h2>Cryptocurrency widgit</h2>
+                <input ref={ref => this.currencyInputRef = ref}  placeholder="Please you coin Id"/>
+                <button className="input_buttons" onClick={() => this.addCoin()}>Add Coin</button>
+                <button className="remove_buttons" onClick={() => this.removeCoins()}>Reset coins</button>
+                <table className="centerTable">
+                  <tr>
+                    <td>Coin</td>
+                    <td>Worth</td>
+                    <td>Change in 24 hours</td>
+                    <td>Amount</td>
+                    <td>Your total</td>
+                    <td></td>
+                  </tr>
   
-          {this.state.currencies ? this.state.currencies.map((coin) => 
-              <Currency id={coin.id} coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
-          ) : null}
+                    {this.state.currencies ? this.state.currencies.map((coin) => 
+                        <Currency id={coin.id} coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
+                    ) : null}
 
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Total</td>
-            <td>£{this.state.currencies ? this.state.currencies.reduce((acc,coin) => {
-                acc += Number((this.state[coin.name]) / Number(this.state.exchangeRate)) * Number(this.state[(coin.name) + 'value']); 
-                return acc;                            
-              },0).toFixed(2) : null}
-            </td>
-          </tr>
-        </table>
-        <div>
-        <input ref={ref => this.twitterInputRef = ref}  placeholder="twitter feed..."/>
-        <button onClick={this.addFeed}>Add feed</button>
-        </div>
-        {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td className="numbers">£{this.state.currencies ? this.state.currencies.reduce((acc,coin) => {
+                        acc += Number((this.state[coin.name]) / Number(this.state.exchangeRate)) * Number(this.state[(coin.name) + 'value']); 
+                        return acc;                            
+                      },0).toFixed(2) : null}
+                    </td>
+                    <td></td>
+                  </tr>
+                </table>
+                <div>
+                <input ref={ref => this.twitterInputRef = ref}  placeholder="twitter feed..."/>
+                <button className="input_buttons" onClick={this.addFeed}>Add feed</button>
+                </div>
+                {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>
 
-        )}
-            </div>
-            </div>
-      </div>
+                )}
+                    </div>
+                  </div>
+              </div>
+      
     );
   }
 }
