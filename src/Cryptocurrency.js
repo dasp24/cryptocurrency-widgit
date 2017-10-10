@@ -89,6 +89,45 @@ class Cryptocurrency extends React.Component {
       localStorage.setItem('feeds',(savedList.slice(0,index).concat(savedList.slice(index+1))).join(','))
       this.setState({feeds: this.state.feeds.slice(0,index).concat(this.state.feeds.slice(index + 1))});
 
+  addCoin() {
+    const id = this.currencyInputRef.value.toUpperCase();
+    const IdList = this.state.currencyIds.concat(id);
+
+    fetch(`http://coincap.io/page/${id}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        if (!data.display_name) {
+          this.currencyInputRef.value = null;
+          throw new Error('Invalid Coin');
+  }
+        return {
+          name: data.display_name,
+          price: data.price_usd,
+          changeInDay: data.cap24hrChange
+        };
+      })
+      .then((data) => {
+        const newData = (this.state.currencies) ? this.state.currencies.concat([data]) : [data];
+        localStorage.setItem('currencies', this.state.currencyIds.concat(id));
+        this.setState({
+          currencies: newData
+        });
+        this.setState({
+          [data.name + 'value']: data.price
+        });
+        this.setState({
+          [data.name]: null
+        });
+        this.setState({
+          currencyIds: IdList
+        });
+        return data;
+      })
+      .then(() => this.currencyInputRef.value = null)
+      .catch((err) => console.log(err));
+
   }
 
   render() {
