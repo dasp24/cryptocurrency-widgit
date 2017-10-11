@@ -1,5 +1,6 @@
 import React from 'react';
 import fetch from 'node-fetch';
+import _ from 'underscore';
 
 import {getExchangeRate
 } from './components/helperFunctions';
