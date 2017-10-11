@@ -9,7 +9,6 @@ class NewCoin extends React.Component {
                       this.props.addCoin(this.currencyInputRef.value);
                       this.currencyInputRef.value = null;
                     }}>Add Coin</button>
-                  <button className="remove_buttons" onClick={() => this.props.resetCoin()}>reset</button>
             </div>
         );
   }
