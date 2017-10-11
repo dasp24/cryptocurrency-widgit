@@ -31,7 +31,6 @@ class Cryptocurrency extends React.Component {
     this.removeFeed = this.removeFeed.bind(this);
     this.addCoin = this.addCoin.bind(this);
     this.removeCoin = this.removeCoin.bind(this);
-    this.resetCoin = this.resetCoin.bind(this);
   }
   componentDidMount() {
 
@@ -155,9 +154,6 @@ class Cryptocurrency extends React.Component {
     });
   }
 
-  resetCoin() {
-    localStorage.removeItem('currencies');
-  }
 
   render() {
     return (
@@ -165,7 +161,7 @@ class Cryptocurrency extends React.Component {
             <div className="section">
               <div className="add_coin">
                 <h2>Cryptocurrency widgit</h2>
-                <NewCoin addCoin={this.addCoin} resetCoin={this.resetCoin}/> 
+                <NewCoin addCoin={this.addCoin}/> 
                 <table className="centerTable">
                   <TableTop/>
                     {this.state.currencies ? _.map(this.state.currencies,(coin) => 
