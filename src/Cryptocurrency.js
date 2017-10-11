@@ -131,7 +131,7 @@ class Cryptocurrency extends React.Component {
         });
   }
 
-  removeCoin(id) {
+  removeCoin(id, name) {
     console.log('removing coin ' + id);
     const index = this.state.currencyIds.indexOf(id);
     const savedList = localStorage.getItem('currencies').split(',');
@@ -139,9 +139,8 @@ class Cryptocurrency extends React.Component {
     localStorage.setItem('currencies', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
     this.setState({
       currencyIds: this.state.currencyIds.slice(0, index).concat(this.state.currencyIds.slice(index + 1)),
-      currencies: this.state.currencies.slice(0, index).concat(this.state.currencies.slice(index + 1))
+      currencies: _.omit(this.state.currencies, name)
     });
-    console.log(this.state);
   }
 
   resetCoin() {
