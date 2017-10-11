@@ -139,7 +139,7 @@ class Cryptocurrency extends React.Component {
           currencyIds: IdList
         });
       })
-      .catch((err) => console.log(err));
+      .catch(() => alert('this coin doesn\'t exist'));
   }
 
   removeCoin(id, name) {
