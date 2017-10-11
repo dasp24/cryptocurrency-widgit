@@ -153,7 +153,7 @@ class Cryptocurrency extends React.Component {
             <div className="section">
               <div className="add_coin">
                 <h2>Cryptocurrency widgit</h2>
-                <NewCoin addCoin={this.addCoin} resetCoin={this.resetCoin}/>
+                <NewCoin addCoin={this.addCoin} resetCoin={this.resetCoin}/> 
                 <table className="centerTable">
                   <TableTop/>
                     {this.state.currencies ? _.map(this.state.currencies,(coin) => 
