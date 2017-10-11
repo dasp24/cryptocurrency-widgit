@@ -2,7 +2,8 @@ import React from 'react';
 import fetch from 'node-fetch';
 import _ from 'underscore';
 
-import {getExchangeRate
+import {
+  getExchangeRate
 } from './components/helperFunctions';
 
 import Currency from './components/Currency';
@@ -41,26 +42,33 @@ class Cryptocurrency extends React.Component {
       feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))
     });
 
-   const getCoinAndValue = () => 
-     this.state.currencyIds.forEach((coinID) => {
-      fetch(`http://coincap.io/page/${coinID}`)
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({currencies : _.extend(this.state.currencies,{[data.display_name]:{
-          name: data.display_name,
-          price: data.price_usd,
-          changeInDay: data.cap24hrChange,
-          id: data.id
-        }
-        })});
-      this.setState({[data.display_name]:null});
+    const getCoinAndValue = () =>
+      this.state.currencyIds.forEach((coinID) => {
+        fetch(`http://coincap.io/page/${coinID}`)
+          .then((response) => response.json())
+          .then((data) => {
+            this.setState({
+              currencies: _.extend(this.state.currencies, {
+                [data.display_name]: {
+                  name: data.display_name,
+                  price: data.price_usd,
+                  changeInDay: data.cap24hrChange,
+                  id: data.id
+                }
+              })
+            });
+            this.setState({
+              [data.display_name]: this.state[data.display_name] ? this.state[data.display_name] : null
+            });
+          });
       });
-    });
 
     setTimeout(() => {
       getCoinAndValue(this.state.currencyIds);
-      getExchangeRate().then((data) => this.setState({exchangeRate: data}));
-    },500);
+      getExchangeRate().then((data) => this.setState({
+        exchangeRate: data
+      }));
+    }, 500);
 
     setInterval(() => {
       console.log(this.state);
@@ -73,16 +81,16 @@ class Cryptocurrency extends React.Component {
   }
 
   handleInputChange(name, value) {
-     value.match(/^[0-9.]+$/) ?
-        this.setState({
+    value.match(/^[0-9.]+$/) ?
+      this.setState({
         [name]: value
       }) :
-    this.setState({
-      [name]: null
-    });
+      this.setState({
+        [name]: null
+      });
   }
 
-  addFeed(feed) {   
+  addFeed(feed) {
     if (feed) {
       this.setState({
         feeds: this.state.feeds.concat(feed)
@@ -92,12 +100,12 @@ class Cryptocurrency extends React.Component {
   }
 
   removeFeed(profile) {
-      const index = this.state.feeds.indexOf(profile);
-      const savedList = localStorage.getItem('feeds').split(',');
-      localStorage.removeItem('feeds');
-      localStorage.setItem('feeds', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
-      this.setState({
-       feeds: this.state.feeds.slice(0, index).concat(this.state.feeds.slice(index + 1))
+    const index = this.state.feeds.indexOf(profile);
+    const savedList = localStorage.getItem('feeds').split(',');
+    localStorage.removeItem('feeds');
+    localStorage.setItem('feeds', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
+    this.setState({
+      feeds: this.state.feeds.slice(0, index).concat(this.state.feeds.slice(index + 1))
     });
 
   }
@@ -108,9 +116,8 @@ class Cryptocurrency extends React.Component {
     const IdList = this.state.currencyIds.concat(id);
     if (this.state.currencyIds.includes(id)) {
       alert('This is a repeat request!');
-    }
-    else
-    fetch(`http://coincap.io/page/${id}`)
+    } else
+      fetch(`http://coincap.io/page/${id}`)
       .then((res) => {
         return res.json();
       })
@@ -120,17 +127,21 @@ class Cryptocurrency extends React.Component {
           throw new Error('Invalid Coin');
         }
         localStorage.setItem('currencies', this.state.currencyIds.concat(id));
-        this.setState({currencies : _.extend(this.state.currencies,{[data.display_name]:{
-          name: data.display_name,
-          price: data.price_usd,
-          changeInDay: data.cap24hrChange,
-          id: data.id
-        }
-        })});
-        this.setState({[data.display_name]:null});
-  })
-  .catch((err) => console.log(err));
-}
+        this.setState({
+          currencies: _.extend(this.state.currencies, {
+            [data.display_name]: {
+              name: data.display_name,
+              price: data.price_usd,
+              changeInDay: data.cap24hrChange,
+              id: data.id
+            }
+          }),
+          [data.display_name]: null,
+          currencyIds: IdList
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 
   removeCoin(id, name) {
     console.log('removing coin ' + id);
