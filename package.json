@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "mocha": "^4.0.1",
     "node-fetch": "^1.7.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-native": "^0.49.3",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.1.2",
     "react-scripts": "^1.0.14",
@@ -17,7 +19,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "node_modules/.bin/mocha ./spec",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "path": "^0.12.7",
+    "underscore": "^1.8.3"
   }
 }
