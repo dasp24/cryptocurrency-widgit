@@ -18,7 +18,7 @@ class Cryptocurrency extends React.Component {
     super();
     this.state = {
       currencyIds: [],
-      currencies: [],
+      currencies: {},
       feeds: [],
       exchangeRate: null
     };
