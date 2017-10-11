@@ -64,7 +64,7 @@ class Cryptocurrency extends React.Component {
 
     setInterval(() => {
       console.log(this.state);
-      updateValue(this.state.currencyIds);
+      getCoinAndValue(this.state.currencyIds)
       getExchangeRate().then((data) => this.setState({
         exchangeRate: data
       }));
