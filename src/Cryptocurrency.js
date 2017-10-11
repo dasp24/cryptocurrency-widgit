@@ -156,8 +156,8 @@ class Cryptocurrency extends React.Component {
                 <NewCoin addCoin={this.addCoin} resetCoin={this.resetCoin}/>
                 <table className="centerTable">
                   <TableTop/>
-                    {this.state.currencies ? this.state.currencies.map((coin) => 
-                        <Currency id={coin.id} coin={coin.name} price={coin.price} changeInDay={coin.changeInDay} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
+                    {this.state.currencies ? _.map(this.state.currencies,(coin) => 
+                        <Currency data={coin} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
                     ) : null}
                   <TableBottom currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} state={this.state} />
                 </table>
