@@ -4,11 +4,13 @@ I am Developing a widgit to use to track your cryptocurrencies. once fully made 
 
 ## Note
 
-At the moment the page takes live data from the coincap API and provides up to date market of value of a few of my favourite coins and their percentage difference over the last 24 hours.
+The app takes live data from the coincap API and provides up to date market value of any coins possible to take from coincap.
 
-Saving your own currencies and having alerts for user requested highs and lows in a particular currency.
+You can choose any coins, add how many of each you have a total will show the full worth of any portfolio, or the portfolio you would like to have.
 
-I have also included several live twitter feeds of some cryptocurrency enthusiasts. 
+The request for coin data is done every 30 seconds and it will update as soon as a change is received.
+
+I have put some functionality into getting and removing twitter feeds. This is see any twitter feeds but the idea was that they would relate to cryptocoins and be useful to see next to a portfolio.
 
 
 ## Instuction for use
@@ -27,24 +29,27 @@ Follow these steps to set up this project locally:
 
 `npm install`
 
-`npm run dev`
+`npm start`
 
-Once webpack has finished compiling the project you should open a browser at http://http://localhost:3000/
+This will automatically open the app on http://localhost:3000/
+
+## Using the app
+
+When adding a new coin please put in the cryptocurrency ID. 
+
+e.g for Bitcoin put in BTC, Litecoin -> LTC etc...
+
+All coins asked for will be remembered locally so when the page is refreshed the previous coins will re-render, the same is true of the twitter feeds. 
+
+The twitterfeed takes the profile name as written on twitter
 
 ## Built With
-babel
-
-express
-
-react
-
-react-router
-
-react-dom
-
-webpack
-
-node-fetch
+    node-fetch
+    react
+    react-dom
+    react-native
+    react-scripts
+    react-twitter-widgets
 
 ## Author
 Daniel Parkes
