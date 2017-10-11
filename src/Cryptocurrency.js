@@ -46,34 +46,16 @@ class Cryptocurrency extends React.Component {
       fetch(`http://coincap.io/page/${coinID}`)
       .then((response) => response.json())
               .then((data) => {
-                  return {
+        this.setState({currencies : _.extend(this.state.currencies,{[data.display_name]:{
                   name: data.display_name,
                   price: data.price_usd,
                   changeInDay: data.cap24hrChange,
-                  id:data.id
-                  };
-              })
-              .then((data) => { 
-                const newData = (this.state.currencies) ? this.state.currencies.concat([data]) : [data];
-            this.setState({
-              currencies: newData
+          id: data.id
+        }
+        })});
+      this.setState({[data.display_name]:null});
               });
-            this.setState({
-              [data.name + 'value']: data.price
             });
-            this.setState({
-              [data.name]: null
-            });
-          });
-      });
-
-   const updateValue = () => {
-    this.state.currencyIds.forEach((coinID) => {
-      fetch(`http://coincap.io/page/${coinID}`)
-      .then((response) => response.json())
-        .then((data) => this.setState({[data.name + 'value']: data.price}));
-      });
-    };
 
     setTimeout(() => {
       getCoinAndValue(this.state.currencyIds);
