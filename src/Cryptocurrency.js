@@ -128,7 +128,8 @@ class Cryptocurrency extends React.Component {
         }
         })});
         this.setState({[data.display_name]:null});
-  });
+  })
+  .catch((err) => console.log(err));
 }
 
   removeCoin(id, name) {
