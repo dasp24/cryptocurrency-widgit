@@ -3,18 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "mocha": "^4.0.1",
     "node-fetch": "^1.7.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-native": "^0.49.3",
-    "react-redux": "^5.0.6",
-    "react-router-dom": "^4.1.2",
     "react-scripts": "^1.0.14",
-    "react-twitter-widgets": "^1.6.1",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0",
-    "webpack": "^3.4.1"
+    "react-twitter-widgets": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,6 +17,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "mocha": "^4.0.1",
     "chai": "^4.1.2",
     "path": "^0.12.7",
     "underscore": "^1.8.3"
