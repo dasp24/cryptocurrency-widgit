@@ -107,7 +107,6 @@ class Cryptocurrency extends React.Component {
     id = id.toUpperCase();
     const IdList = this.state.currencyIds.concat(id);
     if (this.state.currencyIds.includes(id)) {
-      this.currencyInputRef.value = null;
       alert('This is a repeat request!');
     }
     else
@@ -120,31 +119,16 @@ class Cryptocurrency extends React.Component {
           this.currencyInputRef.value = null;
           throw new Error('Invalid Coin');
         }
-        return {
+        localStorage.setItem('currencies', this.state.currencyIds.concat(id));
+        this.setState({currencies : _.extend(this.state.currencies,{[data.display_name]:{
           name: data.display_name,
           price: data.price_usd,
           changeInDay: data.cap24hrChange,
-          id:data.id
-        };
-      })
-      .then((data) => {
-        const newData = (this.state.currencies) ? this.state.currencies.concat([data]) : [data];
-        localStorage.setItem('currencies', this.state.currencyIds.concat(id));
-        this.setState({
-          currencies: newData
+          id: data.id
+        }
+        })});
+        this.setState({[data.display_name]:null});
         });
-        this.setState({
-          [data.name + 'value']: data.price
-        });
-        this.setState({
-          [data.name]: null
-        });
-        this.setState({
-          currencyIds: IdList
-        });
-        return data;
-      })
-      .catch((err) => console.log(err));
   }
 
   removeCoin(id) {
