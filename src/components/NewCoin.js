@@ -4,7 +4,10 @@ class NewCoin extends React.Component {
     render() {
         return (
             <div>
-                  <input ref={ref => this.currencyInputRef = ref}  placeholder="Insert coin ID here..."/>
+                  <input onKeyPress={(e) => {if (e.key === 'Enter') {
+                      this.props.addCoin(this.currencyInputRef.value);
+                      this.currencyInputRef.value = null;
+                  }}} ref={ref => this.currencyInputRef = ref}  placeholder="Insert coin ID here..."/>
                   <button className="input_buttons" onClick={() => {
                       this.props.addCoin(this.currencyInputRef.value);
                       this.currencyInputRef.value = null;
