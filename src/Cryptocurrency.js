@@ -75,7 +75,7 @@ class Cryptocurrency extends React.Component {
 
     setInterval(() => {
       console.log(this.state);
-      getCoinAndValue(this.state.currencyIds)
+      getCoinAndValue(this.state.currencyIds);
       getExchangeRate().then((data) => this.setState({
         exchangeRate: data
       }));
@@ -136,7 +136,7 @@ class Cryptocurrency extends React.Component {
           this.currencyInputRef.value = null;
           throw new Error('Invalid Coin');
         }
-        localStorage.setItem('currencies', this.state.currencyIds.concat(id));
+        localStorage.setItem('currencies', idList.join(','));
         this.setState({
           currencies: _.extend(this.state.currencies, {
             [data.display_name]: {
@@ -147,14 +147,17 @@ class Cryptocurrency extends React.Component {
             }
           }),
           [data.display_name]: null,
-          currencyIds: IdList
+          currencyIds: idList,
+          nameToId: _.extend(this.state.nameToId, {
+            [data.display_name]: data.id
+          })
         });
       })
       .catch(() => alert('this coin doesn\'t exist'));
   }
 
   removeCoin(id, name) {
-    console.log('removing coin ' + id);
+    console.log('removing coin ' + name);
     const index = this.state.currencyIds.indexOf(id);
     const savedList = localStorage.getItem('currencies').split(',');
     localStorage.removeItem('currencies');
@@ -165,26 +168,25 @@ class Cryptocurrency extends React.Component {
     });
   }
 
-
   render() {
     return (
-          <div className="background" style={this.styles}>
-            <div className="section">
-              <div className="add_coin">
-                <h2>Cryptocurrency widgit</h2>
-                <NewCoin addCoin={this.addCoin}/> 
-                <table className="centerTable">
-                  <TableTop/>
-                    {this.state.currencies ? _.map(this.state.currencies,(coin) => 
-                        <Currency data={coin} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
-                    ) : null}
-                  <TableBottom currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} state={this.state} />
-                </table>
-                <NewFeed addFeed={this.addFeed}/>
-                {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)}
-              </div>
-            </div>
-          </div>
+      <div className='background' style={this.styles}>
+      <div className='section'>
+        <div className='add_coin'>
+          <h2>Cryptocurrency widgit</h2>
+          <NewCoin addCoin={this.addCoin}/> 
+          <table className='centerTable'>
+            <TableTop/>
+              {this.state.currencies ? _.map(this.state.currencies,(coin) => 
+                  <Currency data={coin} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
+              ) : null}
+            <TableBottom currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} state={this.state} />
+          </table>
+          <NewFeed addFeed={this.addFeed}/>
+          {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)}
+        </div>
+      </div>
+    </div>
     );
   }
 }
