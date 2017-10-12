@@ -17,8 +17,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "mocha": "^4.0.1",
     "chai": "^4.1.2",
+    "eslint-plugin-react": "^7.4.0",
+    "mocha": "^4.0.1",
     "path": "^0.12.7",
     "underscore": "^1.8.3"
   }
