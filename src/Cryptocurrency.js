@@ -6,6 +6,8 @@ import {
   getExchangeRate
 } from './components/helperFunctions';
 
+/* eslint-disable no-unused-vars*/
+
 import Currency from './components/Currency';
 import Feed from './components/Feed';
 import NewCoin from './components/NewCoin';
@@ -13,6 +15,8 @@ import TableTop from './components/TableTop';
 import TableBottom from './components/TableBottom';
 import NewFeed from './components/NewFeed';
 import image from './background-image.jpg';
+
+/* eslint-enable no-unused-vars*/
 
 class Cryptocurrency extends React.Component {
   constructor() {
