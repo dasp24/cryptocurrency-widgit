@@ -114,9 +114,16 @@ class Cryptocurrency extends React.Component {
   }
 
   addCoin(id) {
-    console.log('getting new coin, beep, boop, beep');
+    const idToCheck = id.split(' ').map((word) => word[0].toUpperCase() + word.split('').slice(1).join('').toLowerCase()).join(' ');
+    if (this.state.nameToId[idToCheck]) {
+      id = this.state.nameToId[idToCheck];
+    }
+    if (this.state.nameToId[id]) {
+      id = this.state.nameToId[id];
+    }
     id = id.toUpperCase();
-    const IdList = this.state.currencyIds.concat(id);
+    console.log(`getting coin ${id}, beep, boop, beep`);
+    const idList = this.state.currencyIds.concat(id);
     if (this.state.currencyIds.includes(id)) {
       alert('This is a repeat request!');
     } else
