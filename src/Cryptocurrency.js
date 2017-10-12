@@ -5,6 +5,7 @@ import _ from 'underscore';
 import {
   getExchangeRate
 } from './components/helperFunctions';
+import idToName from './idToName.json';
 
 /* eslint-disable no-unused-vars*/
 
@@ -24,6 +25,7 @@ class Cryptocurrency extends React.Component {
     this.state = {
       currencyIds: [],
       currencies: {},
+      nameToId: idToName,
       feeds: [],
       exchangeRate: null
     };
