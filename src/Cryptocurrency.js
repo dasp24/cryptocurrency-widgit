@@ -60,9 +60,7 @@ class Cryptocurrency extends React.Component {
                   changeInDay: data.cap24hrChange,
                   id: data.id
                 }
-              })
-            });
-            this.setState({
+              }),
               [data.display_name]: this.state[data.display_name] ? this.state[data.display_name] : null
             });
           });
