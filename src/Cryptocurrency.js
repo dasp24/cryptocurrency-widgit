@@ -94,6 +94,7 @@ class Cryptocurrency extends React.Component {
   }
 
   addFeed(feed) {
+    feed = feed.trim();
     if (feed) {
       this.setState({
         feeds: this.state.feeds.concat(feed)
@@ -114,6 +115,7 @@ class Cryptocurrency extends React.Component {
   }
 
   addCoin(id) {
+    id = id.trim();
     const idToCheck = id.split(' ').map((word) => word[0].toUpperCase() + word.split('').slice(1).join('').toLowerCase()).join(' ');
     if (this.state.nameToId[idToCheck]) {
       id = this.state.nameToId[idToCheck];
