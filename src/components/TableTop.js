@@ -8,6 +8,7 @@ class TableTop extends React.Component {
                 <td>Worth</td>
                 <td>Change in 24 hours</td>
                 <td>Amount</td>
+                <td>Edit</td>                
                 <td>Your total</td>
                 <td></td>
             </tr>
