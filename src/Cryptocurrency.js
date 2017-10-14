@@ -172,7 +172,6 @@ class Cryptocurrency extends React.Component {
 
   render() {
     return (
-      <div className='background' style={this.styles}>
       <div className='section'>
         <div className='add_coin'>
           <h2>Cryptocurrency Widgit</h2>
