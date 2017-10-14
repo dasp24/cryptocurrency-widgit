@@ -13,7 +13,7 @@ import Currency from './components/Currency';
 import Feed from './components/Feed';
 import NewCoin from './components/NewCoin';
 import TableTop from './components/TableTop';
-import TableBottom from './components/TableBottom';
+import Total from './components/Total';
 import NewFeed from './components/NewFeed';
 import image from './background-image.jpg';
 
@@ -175,15 +175,17 @@ class Cryptocurrency extends React.Component {
       <div className='background' style={this.styles}>
       <div className='section'>
         <div className='add_coin'>
-          <h2>Cryptocurrency widgit</h2>
-          <NewCoin addCoin={this.addCoin}/> 
+          <h2>Cryptocurrency Widgit</h2>
           <table className='centerTable'>
+            <tbody>
             <TableTop/>
               {this.state.currencies ? _.map(this.state.currencies,(coin) => 
-                  <Currency data={coin} exchangeRate={this.state.exchangeRate} state={this.state} handleInputChange={this.handleInputChange} removeCoin={this.removeCoin}/>
+                  <Currency data={coin} exchangeRate={this.state.exchangeRate} worth={this.state.worth} handleInputChange={this.handleInputChange} editValue={this.editValue} removeCoin={this.removeCoin}/>
               ) : null}
-            <TableBottom currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} state={this.state} />
+            <NewCoin addCoin={this.addCoin}/> 
+            </tbody>
           </table>
+            <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
           <NewFeed addFeed={this.addFeed}/>
           {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)}
         </div>
