@@ -2,9 +2,6 @@ import React from 'react';
 import fetch from 'node-fetch';
 import _ from 'underscore';
 
-import {
-  getExchangeRate
-} from './components/helperFunctions';
 import idToName from './idToName.json';
 
 /* eslint-disable no-unused-vars*/
@@ -28,13 +25,11 @@ class Cryptocurrency extends React.Component {
       currencyIds: [],
       currencies: {},
       nameToId: idToName,
-      feeds: [],
-      exchangeRate: null
+      feeds: []
     };
     this.styles = {
       backgroundImage: `url(${image})`
     };
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.addFeed = this.addFeed.bind(this);
     this.removeFeed = this.removeFeed.bind(this);
     this.addCoin = this.addCoin.bind(this);
@@ -51,47 +46,42 @@ class Cryptocurrency extends React.Component {
     });
 
     const getCoinAndValue = () =>
-      this.state.currencyIds.forEach((coinID) => {
-        fetch(`http://coincap.io/page/${coinID}`)
+      this.state.currencyIds.forEach((coin) => {
+        fetch(`https://api.coinmarketcap.com/v1/ticker/${coin}/?convert=GBP`,{cache: "no-cache"})
           .then((response) => response.json())
           .then((data) => {
-            const value = localStorage.getItem(`${coinID}`);        
+            const value = localStorage.getItem(`${coin}`);        
             this.setState({
-              currencies: { ...this.state.currencies, [data.display_name]: {
-                name: data.display_name,
-                price: data.price_usd,
-                changeInDay: data.cap24hrChange,
-                id: data.id
+              currencies: { ...this.state.currencies, [data[0].name]: {
+                name: data[0].name,
+                price: data[0].price_gbp,
+                changeInDay: data[0].percent_change_24h,
+                id: data[0].symbol
               } },
-              worth: {...this.state.worth, [data.display_name]:value}
+              worth: {...this.state.worth, [data[0].name]:value}
             });
           });
       });
 
     setTimeout(() => {
       getCoinAndValue(this.state.currencyIds);
-      getExchangeRate().then((data) => this.setState({
-        exchangeRate: data
-      }));
+      console.log(this.state);      
     }, 200);
 
     setInterval(() => {
       console.log(this.state);
       // update price and exhcnage rate only
       getCoinAndValue(this.state.currencyIds);
-      getExchangeRate().then((data) => this.setState({
-        exchangeRate: data
-      }));
-    }, 30000);
+    }, 60000);
 
   }
 
   handleInputChange(name, value) {
-    value.match(/^(\d+)?([.]?\d{0,})?$/) ?
+    value.match(/^[0-9]{0,}([.][0-9]{1,})?$/) ?
       this.setState({
         worth: {...this.state.worth, [name]:value}}) :
         this.setState({
-          worth: {...this.state.worth, [name]:null}})
+          worth: {...this.state.worth, [name]:0}})
         }
   
 
@@ -116,43 +106,44 @@ class Cryptocurrency extends React.Component {
 
   }
 
-  addCoin(id) {
-    if(id) {
+  addCoin(coin) {
+    if(coin) {
     const value = prompt("Please enter the amount");
-    id = id.trim();
-    const idToCheck = id.split(' ').map((word) => word[0].toUpperCase() + word.split('').slice(1).join('').toLowerCase()).join(' ');
-    if (this.state.nameToId[idToCheck]) {
-      id = this.state.nameToId[idToCheck];
-    }
-    if (this.state.nameToId[id]) {
-      id = this.state.nameToId[id];
-    }
-    id = id.toUpperCase();
-    console.log(`getting coin ${id}, beep, boop, beep`);
-    const idList = this.state.currencyIds.concat(id);
-    if (this.state.currencyIds.includes(id)) {
+    coin = coin.trim();
+    // const idToCheck = id.split(' ').map((word) => word[0].toUpperCase() + word.split('').slice(1).join('').toLowerCase()).join(' ');
+    // if (this.state.nameToId[idToCheck]) {
+    //   id = this.state.nameToId[idToCheck];
+    // }
+    // if (this.state.nameToId[id]) {
+    //   id = this.state.nameToId[id];
+    // }
+    coin = coin.toLowerCase();
+    console.log(`getting coin ${coin}, beep, boop, beep`);
+    const idList = this.state.currencyIds.concat(coin) || [coin];
+    if (this.state.currencyIds.includes(coin)) {
       alert('This is a repeat request!');
     } else
-      fetch(`http://coincap.io/page/${id}`)
+      fetch(`https://api.coinmarketcap.com/v1/ticker/${coin}/?convert=GBP`,{cache: "no-cache"})
       .then((res) => {
         return res.json();
       })
-      .then((data) => {
-        if (!data.display_name) {
+      .then((data,err) => {
+        if (!data[0].price_gbp) {
           this.currencyInputRef.value = null;
           throw new Error('Invalid Coin');
         }
         localStorage.setItem('currencies', idList.join(','));
-        localStorage.setItem(`${id}`, value);
+        if (value.match(/^[0-9]{0,}([.][0-9]{1,})?$/)) localStorage.setItem(`${coin}`, value);
+        else localStorage.setItem(`${coin}`, 0)
         this.setState({
-          currencies: { ...this.state.currencies, [data.display_name]: {
-            name: data.display_name,
-            price: data.price_usd,
-            changeInDay: data.cap24hrChange,
-            id: data.id
+          currencies: { ...this.state.currencies, [data[0].name]: {
+            name: data[0].name,
+            price: data[0].price_gbp,
+            changeInDay: data[0].percent_change_24h,
+            id: data[0].symbol
           } },
-          worth:{...this.state.worth, [data.display_name]: value},
-          currencyIds: idList,
+          worth:{...this.state.worth, [data[0].name]: (value.match(/^[0-9]{0,}([.][0-9]{1,})?$/)) ? value:0},
+          currencyIds:  idList,
           nameToId: {...this.state.nameToId, [data.display_name]: data.id }
         });
       })
@@ -160,28 +151,35 @@ class Cryptocurrency extends React.Component {
     }
   }
 
-  removeCoin(id, name) {
+  editValue(id,name) {
+    const storageName = name.toLowerCase();
+    const value = prompt("Please enter the amount");
+    if (value && value.match(/^[0-9]{0,}([.][0-9]{1,})?$/)) {
+      localStorage.removeItem(`${storageName}`);
+      localStorage.setItem(`${storageName}`, value);
+      this.setState({
+        worth: {...this.state.worth, [name]: value}
+      });
+    }
+  }
+
+  removeCoin(name) {
     console.log('removing coin ' + name);
+    const id = name.toLowerCase();
     const index = this.state.currencyIds.indexOf(id);
+    const start = index === 0 ? index - 1 : 0;
+    const newCurrencyIds = this.state.currencyIds.slice(start, index).concat(this.state.currencyIds.slice(index + 1))
     const savedList = localStorage.getItem('currencies').split(',');
     localStorage.removeItem('currencies');
-    localStorage.removeItem(`${name}`);    
-    localStorage.setItem('currencies', (savedList.slice(0, index).concat(savedList.slice(index + 1))).join(','));
+    localStorage.removeItem(`${id}`);    
+    localStorage.setItem('currencies', (savedList.slice(start, index).concat(savedList.slice(index + 1))).join(','));
     this.setState({
-      currencyIds: this.state.currencyIds.slice(0, index).concat(this.state.currencyIds.slice(index + 1)),
+      currencyIds:  newCurrencyIds,
       currencies: _.omit(this.state.currencies, name),
       worth: _.omit(this.state.worth, name)
     });
   }
 
-  editValue(id,name) {
-    const value = prompt("Please enter the amount");
-    localStorage.removeItem(`${id}`);
-    localStorage.setItem(`${id}`, value);
-    this.setState({
-      worth: {...this.state.worth, [name]: value}
-    });
-  }
 
   render() {
     return (
@@ -197,7 +195,9 @@ class Cryptocurrency extends React.Component {
             <NewCoin addCoin={this.addCoin}/> 
             </tbody>
           </table>
-            <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
+          <aside>
+          <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
+          </aside>
           <PieChartFun worth={this.state.worth} currencies={this.state.currencies}/>
           <NewFeed addFeed={this.addFeed}/>
           {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)}
