@@ -8,15 +8,15 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const RADIAN = Math.PI / 180;                    
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-const x  = cx + radius * Math.cos(-midAngle * RADIAN);
-const y = cy  + radius * Math.sin(-midAngle * RADIAN);
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x  = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy  + radius * Math.sin(-midAngle * RADIAN);
 
-return (
-<text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
-{`${(percent * 100).toFixed(0)}%`}
-</text>
-);
+  return (
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
+     {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
 };
 
 
@@ -24,7 +24,6 @@ class PieChartFun extends React.Component {
     getData() {
         const {currencies,worth} = this.props;
         const total =  _.reduce(currencies,(acc,coin) => {
-            console.log(worth[coin.name])
             acc += Number(coin.price) * Number(worth[coin.name]); 
             return acc;                            
           },0);
@@ -34,14 +33,14 @@ class PieChartFun extends React.Component {
                 value: (coinAmount * currencies[coinName].price) / total  * 100
              };
         }));
-        
-        // return percentages.map((item, index) => <Cell fill={COLORS[index % COLORS.length]}/>);
+    }
+
+    onPieEnter() {
     }
 
     render () {
-        console.log(this.getData())
         return (
-          <PieChart width={800} height={400} onMouseEnter={this.onPieEnter}>
+          <PieChart width={400} height={350} onMouseEnter={this.onPieEnter}>
           <Pie
             data={this.getData()} 
             cx={300} 
@@ -52,7 +51,7 @@ class PieChartFun extends React.Component {
             fill="#8884d8"
           >
           {
-          	this.getData().map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+          this.getData().map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
           }
             {/* {this.renderCells()} */}
           </Pie>
