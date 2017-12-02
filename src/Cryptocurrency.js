@@ -38,9 +38,12 @@ class Cryptocurrency extends React.Component {
   }
   componentDidMount() {
 
-    if (localStorage.getItem('currencies')) this.setState({
-      currencyIds: localStorage.getItem('currencies').split(',')
+    if (localStorage.getItem('currencies')) {
+      const idList = _.uniq(localStorage.getItem('currencies').split(','))
+      this.setState({
+      currencyIds: idList
     });
+  }
     if (localStorage.getItem('feeds')) this.setState({
       feeds: this.state.feeds.concat(localStorage.getItem('feeds').split(','))
     });
@@ -65,6 +68,8 @@ class Cryptocurrency extends React.Component {
 
     setTimeout(() => {
       getCoinAndValue(this.state.currencyIds);
+      const idList = _.uniq(this.state.currencyIds).join(',')
+      localStorage.setItem('currencies',idList);
       console.log(this.state);      
     }, 200);
 
