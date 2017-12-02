@@ -114,15 +114,7 @@ class Cryptocurrency extends React.Component {
   addCoin(coin) {
     if(coin) {
     const value = prompt("Please enter the amount");
-    coin = coin.trim();
-    // const idToCheck = id.split(' ').map((word) => word[0].toUpperCase() + word.split('').slice(1).join('').toLowerCase()).join(' ');
-    // if (this.state.nameToId[idToCheck]) {
-    //   id = this.state.nameToId[idToCheck];
-    // }
-    // if (this.state.nameToId[id]) {
-    //   id = this.state.nameToId[id];
-    // }
-    coin = coin.toLowerCase();
+    coin = coin.trim().replace(' ','-').toLowerCase();
     console.log(`getting coin ${coin}, beep, boop, beep`);
     const idList = this.state.currencyIds.concat(coin) || [coin];
     if (this.state.currencyIds.includes(coin)) {
@@ -170,7 +162,7 @@ class Cryptocurrency extends React.Component {
 
   removeCoin(name) {
     console.log('removing coin ' + name);
-    const id = name.toLowerCase();
+    let id = name.replace(' ','-').toLowerCase();
     const index = this.state.currencyIds.indexOf(id);
     const start = index === 0 ? index - 1 : 0;
     const newCurrencyIds = this.state.currencyIds.slice(start, index).concat(this.state.currencyIds.slice(index + 1))
