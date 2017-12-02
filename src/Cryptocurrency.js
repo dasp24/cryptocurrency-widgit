@@ -194,10 +194,8 @@ class Cryptocurrency extends React.Component {
           </table>
           <aside>
           <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
-          </aside>
-          <PieChartFun worth={this.state.worth} currencies={this.state.currencies}/>
-          <NewFeed addFeed={this.addFeed}/>
-          {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)}
+          {/* <NewFeed addFeed={this.addFeed}/>
+          {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)} */}
         </div>
       </div>
     
