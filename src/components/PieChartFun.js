@@ -43,11 +43,11 @@ class PieChartFun extends React.Component {
           <PieChart width={400} height={350} onMouseEnter={this.onPieEnter}>
           <Pie
             data={this.getData()} 
-            cx={300} 
-            cy={200} 
+            cx={'50%'} 
+            cy={'auto'} 
             labelLine={false}
             label={renderCustomizedLabel}
-            outerRadius={80} 
+            outerRadius={100} 
             fill="#8884d8"
           >
           {
