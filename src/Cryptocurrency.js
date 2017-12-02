@@ -193,7 +193,7 @@ class Cryptocurrency extends React.Component {
             </tbody>
           </table>
           <div>
-          <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
+            <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
             <PieChartFun id="pie" worth={this.state.worth} currencies={this.state.currencies}/>
           </div>
           {/* <NewFeed addFeed={this.addFeed}/>
