@@ -1,6 +1,7 @@
 import React from 'react';
 import fetch from 'node-fetch';
 import _ from 'underscore';
+import { WindowResizeListener } from 'react-window-resize-listener'
 
 import idToName from './idToName.json';
 
@@ -25,7 +26,8 @@ class Cryptocurrency extends React.Component {
       currencyIds: [],
       currencies: {},
       nameToId: idToName,
-      feeds: []
+      feeds: [],
+      size: window.outerWidth
     };
     this.styles = {
       backgroundImage: `url(${image})`
@@ -35,6 +37,7 @@ class Cryptocurrency extends React.Component {
     this.addCoin = this.addCoin.bind(this);
     this.removeCoin = this.removeCoin.bind(this);
     this.editValue = this.editValue.bind(this);
+    this.onResize = this.onResize.bind(this);
   }
   componentDidMount() {
 
@@ -177,10 +180,19 @@ class Cryptocurrency extends React.Component {
     });
   }
 
+  onResize() {
+    console.log('moving');
+    this.setState({size: window.outerWidth});
+    
+  }
+
 
   render() {
     return (
-      <div className='section'>
+      <div onResize={() => console.log('moving')} className='section'>
+        <WindowResizeListener onResize={windowSize => 
+          this.setState({size: windowSize.windowWidth})
+        }/>
         <div className='add_coin'>
           <h2>Cryptocurrency Widgit</h2>
           <table className='centerTable'>
@@ -194,7 +206,7 @@ class Cryptocurrency extends React.Component {
           </table>
           <div>
             <Total currencies={this.state.currencies} exchangeRate={this.state.exchangeRate} worth={this.state.worth} />
-            <PieChartFun id="pie" worth={this.state.worth} currencies={this.state.currencies}/>
+            <PieChartFun id="pie" size={this.state.size} worth={this.state.worth} currencies={this.state.currencies}/>
           </div>
           {/* <NewFeed addFeed={this.addFeed}/>
           {this.state.feeds.map((profile) => <Feed removeFeed={this.removeFeed} profile={profile}/>)} */}
