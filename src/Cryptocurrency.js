@@ -37,7 +37,6 @@ class Cryptocurrency extends React.Component {
     this.addCoin = this.addCoin.bind(this);
     this.removeCoin = this.removeCoin.bind(this);
     this.editValue = this.editValue.bind(this);
-    this.onResize = this.onResize.bind(this);
   }
   componentDidMount() {
 
@@ -180,16 +179,10 @@ class Cryptocurrency extends React.Component {
     });
   }
 
-  onResize() {
-    console.log('moving');
-    this.setState({size: window.outerWidth});
-    
-  }
-
 
   render() {
     return (
-      <div onResize={() => console.log('moving')} className='section'>
+      <div className='section'>
         <WindowResizeListener onResize={windowSize => 
           this.setState({size: windowSize.windowWidth})
         }/>
