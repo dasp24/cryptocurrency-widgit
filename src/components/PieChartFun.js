@@ -41,7 +41,7 @@ class PieChartFun extends React.Component {
           <PieChart width={this.props.size} height={350} style={'position:absolute;'}>
           <Pie
             data={this.getData()} 
-            cx={'40%'} 
+            cx={'50%'} 
             cy={'auto'} 
             labelLine={false}
             label={renderCustomizedLabel}
