@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'underscore';
-import { PieChart, Pie, Sector, Cell } from 'recharts';
-import { relative } from 'path';
+import { PieChart, Pie, Cell } from 'recharts';
 
 // const data = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
 // {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
@@ -38,7 +37,7 @@ class PieChartFun extends React.Component {
 
     render () {
         return (
-          <PieChart width={this.props.size} height={350} style={'position:absolute;'}>
+          <PieChart width={this.props.size} height={350}>
           <Pie
             data={this.getData()} 
             cx={'50%'} 
