@@ -1,75 +1,70 @@
-import React, { useState, useEffect} from 'react';
-import fetch from 'node-fetch';
-import _ from 'underscore';
-import Blank from './';
+import React, { useState, useEffect } from "react";
+import fetch from "node-fetch";
+import _ from "underscore";
 
-import idToName from './idToName.json';
+// import idToName from './idToName.json';
 
-import Currency from './components/Currency';
-import NewCoin from './components/NewCoin';
-import TableTop from './components/TableTop';
-import Total from './components/Total';
-import image from './background-image.jpg';
+import Currency from "./components/Currency";
+import NewCoin from "./components/NewCoin";
+import TableTop from "./components/TableTop";
+import Total from "./components/Total";
+// import image from './background-image.jpg';
 
-const Cryptocurrency = props => {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     worth: {},
-  //     currencyIds: [],
-  //     currencies: {},
-  //     nameToId: idToName,
-  //     feeds: [],
-  //     size: window.outerWidth,
-  //   };
-  //   this.styles = {
-  //     backgroundImage: `url(${image})`,
-  //   };
-  // }
-
-
+const Cryptocurrency = (props) => {
   const [worth, setWorth] = useState({});
   const [currencyIds, setCurrencyIds] = useState([]);
   const [currencies, setCurrencies] = useState({});
 
-  const getCoinAndValue = () =>
-      this.state.currencyIds.forEach(coin => {
+  useEffect(() => {
+    const getCoinAndValue = () => {
+      const idList = !!localStorage.getItem("currencies") ? _.uniq(localStorage.getItem("currencies").split(",")) : [];
+
+      idList.forEach((coin) => {
         const headers = new Headers();
         headers.append(
-          'X-CoinAPI-Key', 'd7D956CC7-45A8-47C0-9AC9-3261A9F1F876'
-        )
-        fetch(`https://rest-sandbox.coinapi.io/v1/exchangerate/${coin}/GBP`, {headers})
+          "X-CoinAPI-Key",
+          "d7D956CC7-45A8-47C0-9AC9-3261A9F1F876"
+        );
+        fetch(`https://rest-sandbox.coinapi.io/v1/exchangerate/${coin}/GBP`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CoinAPI-Key": "7D956CC7-45A8-47C0-9AC9-3261A9F1F876",
+          },
+        })
           .then((response) => response.json())
           .then((data) => {
             const value = localStorage.getItem(`${coin}`);
-            setWorth({...worth, [data.asset_id_base]: value});
-            setCurrencies(...currencies,  
-              {[data.asset_id_base]: {
-                name: data.asset_id_base,
-                price: data.rate,
-                id: data.asset_id_base,
-              }})
+            setWorth({ ...worth, [data.asset_id_base]: value });
+            const ids = idList.join(",");
+            localStorage.setItem("currencies", ids);
+            console.log(currencies);
+              setCurrencies( {...currencies,
+                [data.asset_id_base]: {
+                  name: data.asset_id_base,
+                  price: data.rate,
+                  id: data.asset_id_base,
+                },
+              });
           });
       });
+    };
+    if (localStorage.getItem("currencies")) {
+      const idList = _.uniq(localStorage.getItem("currencies").split(","));
+      setCurrencyIds(idList);
+    }
+    setTimeout(() => {
+      console.log(currencyIds)
+      getCoinAndValue(currencyIds);
+   
+    }, 200);
 
-  // componentDidMount() {
-  //   if (localStorage.getItem("currencies")) {
-  //     const idList = _.uniq(localStorage.getItem("currencies").split(","));
-  //     this.setCurrencyIds(idList);
-  //   }
-  //   setTimeout(() => {
-  //     getCoinAndValue(this.state.currencyIds);
-  //     const idList = _.uniq(this.state.currencyIds).join(",");
-  //     localStorage.setItem("currencies", idList);
-  //     console.log(this.state);
-  //   }, 200);
-
-  //   setInterval(() => {
-  //     console.log(this.state);
-  //     // update price and exhcnage rate only
-  //     getCoinAndValue(this.state.currencyIds);
-  //   }, 60000);
-  // }
+    // setInterval(() => {
+    //   console.log(currencies);
+    //   // update price and exhcnage rate only
+    //   getCoinAndValue(currencyIds);
+    // }, 60000);
+  }, []);
 
   const handleInputChange = (name, value) => {
     value.match(/^[0-9]{0,}([.][0-9]{1,})?$/)
@@ -81,8 +76,6 @@ const Cryptocurrency = props => {
         });
   };
 
-
-
   const addCoin = (coin) => {
     if (coin) {
       const value = prompt("Please enter the amount");
@@ -92,16 +85,14 @@ const Cryptocurrency = props => {
       if (currencyIds.includes(coin)) {
         alert("This is a repeat request!");
       } else {
-  
-        
-        fetch(`https://rest-sandbox.coinapi.io/v1/exchangerate/${coin}/GBP`,{
-          method: 'GET',
+        fetch(`https://rest-sandbox.coinapi.io/v1/exchangerate/${coin}/GBP`, {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'X-CoinAPI-Key' : '7D956CC7-45A8-47C0-9AC9-3261A9F1F876'
-          }
+            "Content-Type": "application/json",
+            "X-CoinAPI-Key": "7D956CC7-45A8-47C0-9AC9-3261A9F1F876",
+          },
         })
-          .then((res) =>  res.json())
+          .then((res) => res.json())
           .then((data, err) => {
             if (data.error) {
               this.currencyInputRef.value = null;
@@ -111,17 +102,24 @@ const Cryptocurrency = props => {
             if (value.match(/^[0-9]{0,}([.][0-9]{1,})?$/))
               localStorage.setItem(`${coin}`, value);
             else localStorage.setItem(`${coin}`, 0);
-            setCurrencies({...currencies, [data.asset_id_base]: {
-              name: data.asset_id_base,
-              price: data.rate,
-              id: data.asset_id_base,
-            }})
-            setWorth({...worth, [data.asset_id_base]: value.match(/^[0-9]{0,}([.][0-9]{1,})?$/)
-            ? value
-            : 0})
+            setCurrencies({
+              ...currencies,
+              [data.asset_id_base]: {
+                name: data.asset_id_base,
+                price: data.rate,
+                id: data.asset_id_base,
+              },
+            });
+            setCurrencyIds(idList);
+            setWorth({
+              ...worth,
+              [data.asset_id_base]: value.match(/^[0-9]{0,}([.][0-9]{1,})?$/)
+                ? value
+                : 0,
+            });
           })
           .catch(() => alert("this coin doesn't exist"));
-        }
+      }
     }
   };
 
@@ -142,9 +140,9 @@ const Cryptocurrency = props => {
     const id = name.replace(" ", "-").toLowerCase();
     const index = this.state.currencyIds.indexOf(id);
     const start = index === 0 ? index - 1 : 0;
-    const newCurrencyIds = this.state.currencyIds
-      .slice(start, index)
-      .concat(this.state.currencyIds.slice(index + 1));
+    // const newCurrencyIds = this.state.currencyIds
+    //   .slice(start, index)
+    //   .concat(this.state.currencyIds.slice(index + 1));
     const savedList = localStorage.getItem("currencies").split(",");
     localStorage.removeItem("currencies");
     localStorage.removeItem(`${id}`);
@@ -155,41 +153,37 @@ const Cryptocurrency = props => {
         .concat(savedList.slice(index + 1))
         .join(",")
     );
-    setCurrencies(_.omit(currencies, name))
-    setWorth(_.omit(worth, name))
+    setCurrencies(_.omit(currencies, name));
+    setWorth(_.omit(worth, name));
   };
 
-    return (
-      <div className="section">
-        <div className="add_coin">
-          <h2>Cryptocurrency Widgit</h2>
-          <table className="centerTable">
-            <tbody>
-              <TableTop />
-              {currencies
-                ? _.map(currencies, (coin) => (
-                    <Currency
-                      data={coin}
-                      worth={worth}
-                      handleInputChange={handleInputChange}
-                      editValue={editValue}
-                      removeCoin={removeCoin}
-                    />
-                  ))
-                : null}
-              <NewCoin addCoin={addCoin} />
-            </tbody>
-          </table>
-          <div>
-            <Total
-              currencies={currencies}
-              worth={worth}
-            />
-          </div>
+  return (
+    <div className="section">
+      <div className="add_coin">
+        <h2>Cryptocurrency Widgit</h2>
+        <table className="centerTable">
+          <tbody>
+            <TableTop />
+            {currencies
+              ? _.map(currencies, (coin) => (
+                  <Currency
+                    data={coin}
+                    worth={worth}
+                    handleInputChange={handleInputChange}
+                    editValue={editValue}
+                    removeCoin={removeCoin}
+                  />
+                ))
+              : null}
+            <NewCoin addCoin={addCoin} />
+          </tbody>
+        </table>
+        <div>
+          <Total currencies={currencies} worth={worth} />
         </div>
       </div>
-    );
-  }
-
+    </div>
+  );
+};
 
 export default Cryptocurrency;
